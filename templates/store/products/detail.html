@@ -1,0 +1,234 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block title %}{{ product.name }} | MAX ROULEMENT{% endblock %}
+
+{% block extra_css %}
+.product-showcase {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 420px;
+}
+
+.product-showcase img {
+    max-height: 360px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.product-showcase:hover img {
+    transform: scale(1.04);
+}
+
+.action-card {
+    background: #fff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+}
+
+.quantity-select {
+    cursor: pointer;
+    background-color: #fff;
+    border-color: #e2e8f0;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.quantity-select:focus {
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 0.25rem rgba(245, 158, 11, 0.2);
+}
+
+.btn-add-cart {
+    background: var(--brand-accent);
+    border-color: var(--brand-accent);
+    color: var(--brand-primary);
+    border-radius: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
+}
+
+.btn-add-cart:hover,
+.btn-add-cart:focus {
+    background: var(--brand-accent-hover);
+    border-color: var(--brand-accent-hover);
+    color: var(--brand-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.spec-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.spec-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.9rem;
+}
+
+.spec-list li:last-child {
+    border-bottom: none;
+}
+
+.spec-list .spec-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.spec-list .spec-value {
+    font-weight: 600;
+    color: var(--brand-primary);
+}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5">
+    <main>
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb mb-0 small">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item">
+                    {% if product.product_category %}
+                    <a href="{{ product.product_category.get_absolute_url }}" class="text-decoration-none text-muted">{{ product.product_category }}</a>
+                    {% else %}
+                    <span class="text-muted">Uncategorized</span>
+                    {% endif %}
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="row g-4 g-lg-5">
+
+            <!-- Product Image -->
+            <div class="col-md-6 col-lg-5">
+                <div class="product-showcase shadow-sm">
+                    <img class="img-fluid mx-auto d-block" alt="{{ product.name }}" src="{{ product.image.url }}">
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-md-6 col-lg-7">
+
+                <div class="mb-4">
+                    <span class="badge badge-soft-success rounded-pill px-3 py-2 mb-3">
+                        <i class="bi bi-check-circle me-1"></i>In Stock &amp; Ready to Ship
+                    </span>
+                    <h1 class="display-6 fw-bold mb-2 text-dark">{{ product.name }}</h1>
+                    <p class="text-muted text-uppercase fw-semibold small mb-0">
+                        Category:
+                        {% if product.product_category %}
+                        <a href="{{ product.product_category.get_absolute_url }}" class="text-decoration-none text-dark">{{ product.product_category }}</a>
+                        {% else %}
+                        <span class="text-dark">Uncategorized</span>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Quick specs -->
+                <ul class="spec-list bg-white rounded-3 border p-3 mb-4 shadow-sm">
+                    <li>
+                        <span class="spec-label">Price</span>
+                        <span class="spec-value">DZD {{ product.price }}</span>
+                    </li>
+                    <li>
+                        <span class="spec-label">Availability</span>
+                        <span class="spec-value text-success">In Stock</span>
+                    </li>
+                    <li>
+                        <span class="spec-label">Category</span>
+                        <span class="spec-value">
+                            {% if product.product_category %}
+                            <a href="{{ product.product_category.get_absolute_url }}" class="text-decoration-none">{{ product.product_category }}</a>
+                            {% else %}
+                            Uncategorized
+                            {% endif %}
+                        </span>
+                    </li>
+                </ul>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <h2 class="h6 fw-bold text-dark mb-2">About this item</h2>
+                    <p class="text-secondary lh-lg mb-0">
+                        {{ product.description|slice:":355" }}...
+                        {% if product.description|length > 355 %}
+                        <a href="#description-full" class="text-decoration-none fw-semibold ms-1"
+                            style="color: var(--brand-accent);">Read more</a>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Add to Cart -->
+                <div class="action-card p-4 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-end mb-3">
+                        <span class="text-muted fw-semibold">Total Price</span>
+                        <span class="fs-2 fw-bold text-dark lh-1">DZD {{ product.price }}</span>
+                    </div>
+
+                    <hr class="text-secondary opacity-25 mb-4">
+
+                    <div class="row g-3 align-items-end">
+                        <div class="col-auto">
+                            <label for="select"
+                                class="form-label text-muted fw-semibold small mb-1 d-block">Quantity</label>
+                            <select id="select" class="form-select form-select-lg quantity-select text-center"
+                                style="min-width: 100px;">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label class="form-label mb-1 d-block visually-hidden">Action</label>
+                            <button type="button" id="add-button" value="{{product.id}}"
+                                class="btn btn-add-cart btn-lg w-100 text-uppercase">
+                                <i class="bi bi-cart-plus me-2"></i>Add to Basket
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).on('click', '#add-button', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "basket:basket_add" %}',
+            data: {
+                productid: $('#add-button').val(),
+                productqty: $('#select option:selected').text(),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: 'post'
+            },
+            success: function (json) {
+                document.getElementById("basket-qty").innerHTML = json.qty
+            },
+            error: function (xhr, errmsg, err) { }
+        });
+    })
+</script>
+{% endblock %}

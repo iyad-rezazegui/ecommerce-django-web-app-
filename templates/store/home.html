@@ -1,0 +1,147 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block title %}Home | MAX ROULEMENT{% endblock %}
+
+{% block extra_css %}
+.hero-banner {
+    /* Added #000 at the end so the empty space on the sides matches the image's black background */
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(245, 158, 11, 0.25) 100%),
+                url("{% static 'images/04a3c5e3-a9a4-43e7-bee3-a58354335580.jpeg' %}") #000;
+                
+    /* 'cover' applies to the gradient layer, 'contain' applies to your image layer */
+    background-size: cover, contain; 
+    
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 520px;
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    position: relative;
+    overflow: hidden;
+}
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+}
+
+.hero-stat {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+}
+
+.btn-accent {
+    background: var(--brand-accent);
+    border-color: var(--brand-accent);
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
+.btn-accent:hover {
+    background: var(--brand-accent-hover);
+    border-color: var(--brand-accent-hover);
+    color: var(--brand-primary);
+}
+{% endblock %}
+
+{% block content %}
+<main class="pb-5">
+
+    <!-- Hero Section -->
+    <section class="hero-banner d-flex align-items-center text-white mb-5">
+        <div class="container hero-content py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-7 text-center text-lg-start">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
+                        <i class="bi bi-globe2 me-1"></i> Global Bearings Store
+                    </span>
+                    <h1 class="display-4 hero-title mb-3">Precision Automotive &amp; Industrial Bearings</h1>
+                    <p class="lead opacity-90 mb-4" style="max-width: 560px;">
+                        High-performance ball bearings, cylindrical rollers, and custom mechanical components engineered for reliability.
+                    </p>
+                    <div class="d-flex justify-content-center justify-content-lg-start gap-3 flex-wrap">
+                        <a href="#products-grid" class="btn btn-accent btn-lg px-4 shadow">
+                            <i class="bi bi-grid-3x3-gap me-2"></i>Browse Catalog
+                        </a>
+                        <a href="#" class="btn btn-outline-light btn-lg px-4 fw-semibold">
+                            Create Account
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-flex justify-content-end mt-4 mt-lg-0">
+                    <div class="hero-stat text-center">
+                        <div class="display-6 fw-bold text-warning">{{ products|length }}+</div>
+                        <div class="small opacity-75 text-uppercase tracking-wide">Products Available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Catalog Section -->
+    <div class="container" id="products-grid">
+        <div class="page-header d-flex align-items-end justify-content-between flex-wrap gap-3">
+            <div>
+                <h2 class="h3 mb-1">All Products</h2>
+                <p class="text-muted mb-0">Browse our latest bearing inventory</p>
+            </div>
+            <span class="badge bg-white text-secondary border px-3 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-box-seam me-1"></i>{{ products|length }} Items
+            </span>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+            {% for product in products %}
+            <div class="col">
+                <div class="card product-card h-100 border-0 shadow-sm">
+                    <div class="product-img-wrapper">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                    </div>
+
+                    <div class="card-body d-flex flex-column p-3">
+                        <div class="mb-2">
+                            <span class="badge badge-soft-success rounded-pill px-2 py-1 small">In Stock</span>
+                        </div>
+
+                        <h3 class="h6 card-title mb-2 fw-semibold">
+                            <a class="text-dark text-decoration-none stretched-link" href="{{ product.get_absolute_url }}">
+                                {{ product.name }}
+                            </a>
+                        </h3>
+
+                        <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                            <span class="fw-bold text-dark">
+                                {% if product.price %}
+                                DZD {{ product.price }}
+                                {% else %}
+                                <span class="text-muted">Inquire</span>
+                                {% endif %}
+                            </span>
+                            <span class="btn btn-sm btn-dark rounded-circle p-0 d-flex align-items-center justify-content-center"
+                                style="width: 32px; height: 32px;">
+                                <i class="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5 bg-white rounded-4 shadow-sm border">
+                    <i class="bi bi-inbox display-4 text-muted mb-3 d-block"></i>
+                    <p class="text-muted fs-5 mb-0">No products available at the moment.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

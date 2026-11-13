@@ -1,0 +1,43 @@
+{% extends '../base.html' %}
+
+{% block title %}Cash on Delivery Checkout{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body px-4 py-5">
+                    <h2 class="mb-4">Confirm Your Order</h2>
+                    <p>You have selected <strong>Cash on Delivery</strong>.</p>
+                    
+                    <form method="POST" action="{% url 'checkout:paid' %}">
+                        {% csrf_token %}
+
+                        <!-- Full Name Field -->
+                        <div class="form-group mb-3">
+                            <label for="full_name">Full Name <span class="text-muted small">(Required)</span></label>
+                            <input type="text" id="full_name" name="full_name" class="form-control" placeholder="John Doe" required>
+                        </div>
+
+                        <!-- Phone Field -->
+                        <div class="form-group mb-3">
+                            <label for="phone">Phone Number <span class="text-muted small">(Required)</span></label>
+                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="0553431337" required>
+                        </div>
+
+                        <!-- Address Field -->
+                        <div class="form-group mb-4">
+                            <label for="address">Delivery Address <span class="text-muted small">(Required)</span></label>
+                            <input id="address" name="adress" class="form-control"  placeholder="wilaya region" ></input>
+                        </div>
+
+                        <!-- Submit Input -->
+                        <input class="btn btn-primary btn-block py-2 mb-4 mt-3 fw500 w-100" type="submit" value="Place Order">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
